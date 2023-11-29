@@ -1,0 +1,56 @@
+.tool:hover {
+  background-color: #f3c90dd3;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 5px #888888;
+}
+
+
+
+
+#sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  --tw-bg-opacity: 1;
+  background-color: #0B4F6C;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  transition: 0.5s;
+  z-index: 1;
+}
+
+#sidebar div {
+  color: white;
+  transition: 0.3s;
+}
+
+#sidebar .closebtn {
+  display: flex;
+  justify-content: right;
+  font-size: 50px;
+  margin-right: 2rem;
+}
+
+#sidebar .closebtn span{
+    cursor: pointer;
+}
+
+#toolbar {
+  transition: margin-left 0.5s;
+  padding: 16px;
+  --tw-bg-opacity: 1;
+  color: white;
+  background-color: #0B4F6C;
+}
+
+#open-btn {
+  font-size: 30px;
+  cursor: pointer;
+  position: fixed;
+  z-index: 2;
+}
