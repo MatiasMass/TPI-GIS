@@ -1,57 +1,23 @@
 import { FiLayers } from "react-icons/fi";
 import "./LayersPanel.css";
 import { useEffect, useState } from "react";
-
-const availableLayers = [
-  {
-    id: 1,
-    name: "vegetacion",
-    checked: false,
-  },
-  {
-    id: 2,
-    name: "capa automovilistica",
-    checked: true,
-  },
-  {
-    id: 3,
-    name: "capa corrientes",
-    checked: true,
-  },
-  {
-    id: 4,
-    name: "tylor swift",
-    checked: false,
-  },
-  {
-    id: 5,
-    name: "gis material",
-    checked: false,
-  },
-  {
-    id: 6,
-    name: "Limite Politico Administrativo Limítrofe",
-    checked: false,
-  },
-
-  {
-    id: 7,
-    name: "gis 2do parcial",
-    checked: false,
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { toggleLayer } from "../../redux/features/layers/layersSlice";
 
 function LayersPanel() {
-  const [filterLayers, setFilterLayers] = useState([...availableLayers]);
+  const availableLayers = useSelector(store => store.layers.availableLayers)
 
-  const [filter, setFilter] = useState("");
+  const [filterLayers, setFilterLayers] = useState(availableLayers)
+  const [filter, setFilter] = useState('')
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    const filteredLayers = availableLayers.filter((layer) =>
-      layer.name.toLowerCase().includes(filter.toLowerCase())
-    );
-    setFilterLayers(filteredLayers);
-  }, [filter]);
+    const filteredLayers = availableLayers.filter(layer => layer.name.toLowerCase().includes(filter.toLowerCase()))
+    setFilterLayers(filteredLayers)
+  }, [availableLayers, filter])
+
+
 
   useEffect(() => {
     document.addEventListener("click", function (event) {
@@ -67,16 +33,20 @@ function LayersPanel() {
     });
   }, []);
 
-  const handleFilter = (event) => {
-    setFilter(event.target.value);
-  };
-
   const toggleButton = function () {
     var optionsContainer = document.getElementById("options-container");
     optionsContainer.style.display =
       optionsContainer.style.display === "none" ? "block" : "none";
   };
 
+
+  const handleFilter = (e) => {
+    setFilter(e.currentTarget.value)
+  }
+
+  const handleChange = (name) => {
+    dispatch(toggleLayer(name))
+  }
 
   return (
     <>
@@ -101,7 +71,7 @@ function LayersPanel() {
         <div className="overflow-auto sm:h-60 h-40 w-full  ">
           {filterLayers?.map((layer) => (
             <div
-              key={layer.id}
+              key={layer.name}
               className="flex items-center gap-2 my-2 
               layers
               "
@@ -113,8 +83,8 @@ function LayersPanel() {
                 cursor-pointer"
                   type="checkbox"
                   defaultChecked={layer.checked}
-                  onChange={() => (layer.checked = !layer.checked)}
-                />
+                  onChange={() => handleChange(layer.name)}
+                  />
               </div>
               {layer.name}
             </div>

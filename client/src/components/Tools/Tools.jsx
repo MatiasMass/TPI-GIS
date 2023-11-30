@@ -9,7 +9,7 @@ import { TbPolygonOff } from "react-icons/tb";
 
 import { useDispatch, useSelector } from "react-redux";
 import "./Tools.css";
-import { toggleSelectedOption } from "../../redux/features/interactions/interactionsSlice";
+import { setToFalse, toggleSelectedOption } from "../../redux/features/interactions/interactionsSlice";
 
 const selectOptionIcons = (option) => {
   switch (option) {
@@ -36,10 +36,18 @@ const selectOptionIcons = (option) => {
 
 function Tools() {
   const options = useSelector((state) => state.interactions.options);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const toggleSelection = (id) => {
     dispatch(toggleSelectedOption(id));
+  };
+
+  const onMouseEnter = (id) => {
+    // dispatch(toggleSelectedOption(id))
+  };
+
+  const onMouseLeave = (id) => {
+    // dispatch(setToFalse(id))
   };
 
   // open and close sidebar
@@ -81,6 +89,8 @@ function Tools() {
             onClick={() => {
               toggleSelection(option.id);
             }}
+            onMouseEnter={() => onMouseEnter(option.id)}
+            onMouseLeave={() => onMouseLeave(option.id)}
           >
             {selectOptionIcons(option.id)}
             <h3>{option.name}</h3>

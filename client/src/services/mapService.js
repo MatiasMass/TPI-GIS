@@ -1,31 +1,26 @@
-import { createSlice } from "@reduxjs/toolkit";
+import axios from 'axios'
+import { VITE_API_URL } from '../../vite-env.d' 
 
-const initialMapView = {
-  center: [-61, -26],
-  zoom: 7.5,
-  projection: 'EPSG:4326'
-};
+export const getIntersectedFeatures = async (layers, coords) => {
+  const response = await axios.post(`${VITE_API_URL}/intersect`, {
+    layers,
+    coords
+  })
+  return response.data
+}
 
-export const mapSlice = createSlice({
-  name: "map",
-  initialState: {
-    mapView: initialMapView,
-    target: null, // Puedes almacenar el target aquí si es necesario
-  },
-  reducers: {
-    showMap: (state, action) => {
-      console.log('todo bien');
-      console.log(state, action);
-    },
-    setMapView: (state, action) => {
-      state.mapView = action.payload;
-    },
-    setTarget: (state, action) => {
-      state.target = action.payload;
-    }
-  },
-});
+export const postMarker = async (marker) => {
 
-export const { showMap, setMapView, setTarget } = mapSlice.actions;
+  const response = await axios.post(`${VITE_API_URL}/addMarker`, marker)
+  return response.data
+}
 
-export default mapSlice.reducer;
+export const getMarkers = async () => {
+  const response = await axios.get(`${VITE_API_URL}/markers`)
+  return response.data
+}
+
+export const removeMarkers = async (coords) => {
+  const response = await axios.post(`${VITE_API_URL}/removeMarkers`, { coords })
+  return response.data
+}

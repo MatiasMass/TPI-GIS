@@ -2,47 +2,87 @@ import Tools from "./Tools/Tools";
 import "./Home.css";
 import Map from "./Maps/Map";
 import LayersPanel from "./LayersPanel/LayersPanel";
-import Leyend from "./Leyend/Leyend";
+// import Leyend from "./Leyend/Leyend";
 import Controls from "./Controls/Controls";
-import Scale from "./Controls/Scale";
+import ScaleMap from "./Controls/ScaleMap";
+import FullScreenMap from "./Controls/FullScreen";
 import { useEffect, useState } from "react";
 import FrontPage from "./FrontPage/FrontPage";
 import Interactions from "./Interactions/Interactions";
 import MeasureInteraction from "./Interactions/MeasureInteraction";
+import RemoveMarkerInteraction from "./Interactions/RemoveMarkerInteraction";
 import VectorSource from "ol/source/Vector";
-import CircleStyle from 'ol/style/Circle'
+import CircleStyle from "ol/style/Circle";
 import Stroke from "ol/style/Stroke";
 import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
+import AddMarkerInteraction from "./Interactions/AddMarkerInteraction";
+import NavigationInteraction from "./Interactions/NavigationInteraction";
+import DragBoxInteraction from "./Interactions/DragBoxInteraction";
+import Layers from "./Layers/Layers";
+import TileLayer from "./Layers/TileLayer";
+import ImageLayer from "./Layers/ImageLayer";
+import { ImageWMS, TileWMS } from "ol/source";
+import VectorLayer from "./Layers/VectorLayer";
+import { useSelector } from "react-redux";
 
-const url = "3wqeqwde";
+const url = `http://qgis.demo/cgi-bin/qgis_mapserv.fcgi?MAP=/home/qgis/projects/TPI.qgz`
 
 function Home() {
   const [loading, setLoading] = useState(false); // cambiar a true
+  const availableLayers = useSelector((store) => store.layers.availableLayers);
+  
+  console.log(availableLayers);
 
   const [measureLayerSource, setMeasureLayerSource] = useState(
     new VectorSource()
   );
+  const [markersLayerSource, setMarkersLayerSource] = useState(
+    new VectorSource()
+  );
 
-  const style = new Style({
-    fill: new Fill({
-      color: 'rgba(255, 255, 255, 0.2)',
-    }),
-    stroke: new Stroke({
-      color: 'rgba(0, 0, 0, 0.5)',
-      lineDash: [10, 10],
-      width: 2,
-    }),
-    image: new CircleStyle({
-      radius: 5,
+  const [consultLayerSource, setConsultLayerSource] = useState(
+    new VectorSource()
+  );
+
+  const styleFunction = () => {
+    return new Style({
       stroke: new Stroke({
-        color: 'rgba(0, 0, 0, 0.7)',
+        color: "rgba(255, 0, 0, 1)",
+        width: 2,
       }),
       fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.2)',
+        color: "rgba(255, 0, 0, 0.2)",
       }),
-    }),
-  });
+      image: new CircleStyle({
+        radius: 7,
+        fill: new Fill({
+          color: "rgba(255, 0, 0, 0.2)",
+        }),
+      }),
+    });
+  };
+
+  const style = () =>
+    new Style({
+      fill: new Fill({
+        color: "rgba(255, 255, 255, 0.2)",
+      }),
+      stroke: new Stroke({
+        color: "rgba(0, 0, 0, 0.5)",
+        lineDash: [10, 10],
+        width: 2,
+      }),
+      image: new CircleStyle({
+        radius: 5,
+        stroke: new Stroke({
+          color: "rgba(0, 0, 0, 0.7)",
+        }),
+        fill: new Fill({
+          color: "rgba(255, 255, 255, 0.2)",
+        }),
+      }),
+    });
 
   // front page loading
   useEffect(() => {
@@ -53,6 +93,16 @@ function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+
+  const options = {
+    url: url,
+    params: {
+      LAYERS: "capabaseargenmap",
+    },
+    serverType: "qgis",
+    crossOrigin: "anonymous",
+  };
+  
   return (
     <div className="flex flex-row w-[100wh] min-h-[100vh] bg-[#0B4F6C] ">
       {loading ? (
@@ -70,15 +120,67 @@ function Home() {
           "
           >
             <Map>
+              <Layers>
+                <TileLayer
+                  source={
+                    new TileWMS({
+                      url: "https://wms.ign.gob.ar/geoserver/ows",
+                      params: {
+                        LAYERS: "capabaseargenmap",
+                      },
+                    })
+                  }
+                  zIndex={0}
+                />
+                {availableLayers.map((layer) => (
+                  <div key={layer.name}>
+                    {layer.visible && (
+                      <ImageLayer
+                        key={layer.name}
+                        source={new ImageWMS({...options, params: {LAYERS: layer.name}})}
+                        zIndex={layer.zIndex}
+                      />
+                    )}
+                  </div>
+                ))}
+                <VectorLayer
+                  source={measureLayerSource}
+                  style={{
+                    "fill-color": "rgba(255, 255, 255, 0.2)",
+                    "stroke-color": "#ffcc33",
+                    "stroke-width": 2,
+                    "circle-radius": 7,
+                    "circle-fill-color": "#ffcc33",
+                  }}
+                  zIndex="4"
+                />
+                <VectorLayer
+                  zIndex={5}
+                  source={consultLayerSource}
+                  style={styleFunction}
+                />
+                <VectorLayer zIndex={6} source={markersLayerSource} marker />
+              </Layers>
               <Interactions>
-                <MeasureInteraction 
+                <NavigationInteraction />
+                <DragBoxInteraction />
+
+                <MeasureInteraction
                   drawOptions={{
                     source: measureLayerSource,
                     type: "LineString",
                     style: style,
                   }}
                 />
+                <AddMarkerInteraction markersLayerSource={markersLayerSource} />
+                <RemoveMarkerInteraction
+                  markersLayerSource={markersLayerSource}
+                />
               </Interactions>
+              <Controls>
+                <FullScreenMap />
+                <ScaleMap />
+              </Controls>
             </Map>
             <LayersPanel />
           </div>

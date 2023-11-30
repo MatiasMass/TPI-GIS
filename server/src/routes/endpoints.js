@@ -96,11 +96,14 @@ router.post("/addMarker", async (req, res) => {
   const client = await pool.connect();
 
   try {
-    const { name, description, coordinates } = req.body.properties;
+    console.log(req.body);
+    const { name, description } = req.body.properties;
+    const { coordinates } = req.body.geometry;
+    console.log(name, description, coordinates);
     await client.query("BEGIN");
 
     const queryText =
-      'INSERT INTO "Markers" ("Nombre", "Descripcion", geometry) VALUES ($1, $2, ST_SetSRID(ST_MakePoint($3, $4), 4326)) RETURNING *';
+      'INSERT INTO public."Markers" ("Nombre", "Descripcion", geometry) VALUES ($1, $2, ST_SetSRID(ST_MakePoint($3, $4), 4326)) RETURNING *';
     const values = [name, description, coordinates[0], coordinates[1]];
 
     const { rows } = await client.query(queryText, values);
@@ -185,7 +188,7 @@ router.post("/intersect", async (req, res) => {
 });
 
 // Endpoint para eliminar Markers
-router.delete("/removeMarkers", async (req, res) => {
+router.post("/removeMarkers", async (req, res) => {
   const pool = new Pool({
     user: user,
     password: password,

@@ -40,7 +40,7 @@ const Map = ({ children }) => {
   return (
     <MapContext.Provider value={{ map }}>
       <div className="flex justify-center items-center w-[100%]">
-        <div ref={mapRef} id="ol-map" className="w-[100%] h-[100vh]">
+        <div ref={mapRef} id="ol-map" className="ol-map w-[100%] h-[100vh] relative">
           {children}
         </div>
       </div>
