@@ -98,7 +98,7 @@ const AddMarkerInteraction = ({ markersLayerSource }) => {
   return (
     <form ref={popUpRef} onSubmit={handleSubmit}>
       {isShown && (
-        <div className="bg-gray-500 p-5 rounded-lg gap-3 flex flex-col">
+        <div className="bg-red-500 p-5 rounded-lg gap-3 flex flex-col">
           <div className="flex flex-col gap-2">
             <label
               className="bg-slate-600 rounded-md p-1.5 text-white"

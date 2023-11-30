@@ -113,10 +113,11 @@
   left: 20px;
   z-index: 1000;
   --tw-bg-opacity: 1;
-  background-color: rgb(51 65 85 / var(--tw-bg-opacity));
+  background-color: rgb(100 28 52 / var(--tw-bg-opacity));
   padding: 5px;
   border-radius: 5px;
   box-shadow: 0 1px 7px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 .ol-full-screen button{
