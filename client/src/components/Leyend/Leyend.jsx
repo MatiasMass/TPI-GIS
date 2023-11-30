@@ -33,11 +33,11 @@ console.log(visibleLayers)
   return (
     <>
       {leyendSource &&
-        <div className='bg-slate-200 p-3 flex flex-col gap-2 rounded-lg text-white'>
-          <h6 className=' rounded-md p-2 text-white'>
-            Leyenda:
+        <div className='bg-red-200 p-3 flex flex-col gap-2 rounded-lg text-black'>
+          <h6 className=' rounded-md p-2 text-black'>
+            Leyenda
           </h6>
-          <img className='sm:max-h-[50vh] text-white' src={leyendSource} />
+          <img className='sm:max-h-[50vh] text-black' src={leyendSource} />
         </div>}
     </>
   )
