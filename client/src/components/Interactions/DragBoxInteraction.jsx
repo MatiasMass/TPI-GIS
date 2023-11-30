@@ -5,6 +5,7 @@ import { always } from 'ol/events/condition'
 import { useDispatch, useSelector } from 'react-redux'
 import { getIntersectedFeatures } from '../../services/mapService' 
 import MapContext from '../Maps/MapContext'
+import { setConsultLayer } from '../../redux/features/consults/consultsSlice'
 
 const DragBoxInteraction = () => {
   const options = useSelector((state) => state.interactions.options);
@@ -22,7 +23,14 @@ const DragBoxInteraction = () => {
   const handleIntersectedFeatures = (interactionCoordinates) => {
     if (visibleLayers.length === 0) return
     getIntersectedFeatures(visibleLayers, interactionCoordinates).then((response) => {
-      console.log(response)
+      // const responseToList = Object.entries(response).map(([layer, { features }]) => {
+      //   return {
+      //     layer,
+      //     features
+      //   }
+      // })
+
+      dispatch(setConsultLayer(response))
     })
   }
 

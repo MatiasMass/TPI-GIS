@@ -84,7 +84,7 @@ function Tools() {
           <div
             key={index}
             className={`flex flex-col justify-center items-center tool p-2
-            ${option.selected ? "bg-red-500" : ""}
+            ${option.selected ? "bg-slate-500" : ""}
         `}
             onClick={() => {
               toggleSelection(option.id);

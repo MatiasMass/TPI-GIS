@@ -26,12 +26,16 @@ import { ImageWMS, TileWMS } from "ol/source";
 import VectorLayer from "./Layers/VectorLayer";
 import { useSelector } from "react-redux";
 import Leyend from "./Leyend/Leyend";
+import { getMarkers } from "../services/mapService";
+import GeoJSON from 'ol/format/GeoJSON'
+import Modal from "./Modal/Modal";
 
 const url = `http://qgis.demo/cgi-bin/qgis_mapserv.fcgi?MAP=/home/qgis/projects/TPI.qgz`;
 
 function Home() {
-  const [loading, setLoading] = useState(false); // cambiar a true
+  const [loading, setLoading] = useState(true); // cambiar a true
   const availableLayers = useSelector((store) => store.layers.availableLayers);
+  const consultLayer = useSelector(state => state.consultLayer.consults)
 
   const [measureLayerSource, setMeasureLayerSource] = useState(
     new VectorSource()
@@ -43,6 +47,9 @@ function Home() {
   const [consultLayerSource, setConsultLayerSource] = useState(
     new VectorSource()
   );
+
+  const [showModal, setShowModal] = useState(false)
+
 
   const styleFunction = () => {
     return new Style({
@@ -91,6 +98,39 @@ function Home() {
 
     return () => clearTimeout(timer);
   }, []);
+
+
+  useEffect(() => {
+    (async function () {
+      const response = await getMarkers()
+      console.log(response)
+      const format = new GeoJSON()
+      const features = format.readFeatures(response)
+      const source = new VectorSource({
+        features
+      })
+      setMarkersLayerSource(() => source)
+    }())
+    return () => {
+      setMarkersLayerSource(() => new VectorSource())
+    }
+  }, [])
+
+  useEffect(() => {
+    const format = new GeoJSON()
+    const source = new VectorSource()
+
+    Object.entries(consultLayer).forEach(([layer, value]) => {
+      const features = format.readFeatures(value)
+      source.addFeatures(features)
+    })
+    setShowModal(true)
+    setConsultLayerSource(source)
+    return () => {
+      setConsultLayerSource(() => new VectorSource())
+    }
+  }, [consultLayer])
+
 
   const options = {
     url: url,
@@ -187,6 +227,10 @@ function Home() {
               </Controls>
             </Map>
             <LayersPanel />
+            
+            <Modal showModal={showModal} setShowModal={setShowModal} />
+         
+
           </div>
         </>
       )}

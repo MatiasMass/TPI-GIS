@@ -29,21 +29,11 @@ export const interactionsSlice = createSlice({
         selected: false,
         name: "Eliminar Marcador"
       },
-      {
-        id: "addPolygon",
-        selected: false,
-        name: "Agregar Polígono"
-      },
-      {
-        id: "removePolygon",
-        selected: false,
-        name: "Eliminar Polígono"
-      },
-      {
-        id: "removeAll",
-        selected: false,
-        name: "Eliminar Todo"
-      }
+      // {
+      //   id: "removeAll",
+      //   selected: false,
+      //   name: "Eliminar Todo"
+      // }
     ],
   },
   reducers: {
