@@ -121,6 +121,8 @@ router.post("/addMarker", async (req, res) => {
 
 // Endpoint para la intersección de capas
 router.post("/intersect", async (req, res) => {
+  console.log(req.body);
+
   const pool = new Pool({
     user: user,
     password: password,
@@ -130,8 +132,10 @@ router.post("/intersect", async (req, res) => {
   });
   const client = await pool.connect();
   try {
-    const { layers, coords } = req.body;
-    const layersNames = layers.map((layer) => layer.sourceName);
+    const { layersLW, coords } = req.body;
+    // const { layers, coords } = req.body;
+    console.log(req.body);
+    const layersNames = layersLW.map((layer) => layer.sourceName);
     let wkt = "";
 
     if (coords.length === 2) {
@@ -150,8 +154,8 @@ router.post("/intersect", async (req, res) => {
 
     await Promise.all(
       layersNames.map(async (layer) => {
-        const initialQuery = `SELECT *, ST_AsGeoJSON("${layer}".geometry) as features FROM "${layer}"`;
-        const query = `${initialQuery} WHERE ST_Intersects(ST_GeomFromText('${wkt}', 4326), "${layer}".geometry)`;
+        const initialQuery = `SELECT *, ST_AsGeoJSON("${layer}".geom) as features FROM "${layer}"`;
+        const query = `${initialQuery} WHERE ST_Intersects(ST_GeomFromText('${wkt}', 4326), "${layer}".geom)`;
         console.log(query);
 
         const { rows } = await client.query(query);

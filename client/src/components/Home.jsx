@@ -25,14 +25,13 @@ import ImageLayer from "./Layers/ImageLayer";
 import { ImageWMS, TileWMS } from "ol/source";
 import VectorLayer from "./Layers/VectorLayer";
 import { useSelector } from "react-redux";
+import Leyend from "./Leyend/Leyend";
 
-const url = `http://qgis.demo/cgi-bin/qgis_mapserv.fcgi?MAP=/home/qgis/projects/TPI.qgz`
+const url = `http://qgis.demo/cgi-bin/qgis_mapserv.fcgi?MAP=/home/qgis/projects/TPI.qgz`;
 
 function Home() {
   const [loading, setLoading] = useState(false); // cambiar a true
   const availableLayers = useSelector((store) => store.layers.availableLayers);
-  
-  console.log(availableLayers);
 
   const [measureLayerSource, setMeasureLayerSource] = useState(
     new VectorSource()
@@ -93,7 +92,6 @@ function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-
   const options = {
     url: url,
     params: {
@@ -102,7 +100,7 @@ function Home() {
     serverType: "qgis",
     crossOrigin: "anonymous",
   };
-  
+
   return (
     <div className="flex flex-row w-[100wh] min-h-[100vh] bg-[#0B4F6C] ">
       {loading ? (
@@ -112,6 +110,7 @@ function Home() {
       ) : (
         <>
           <Tools />
+          <Leyend url={url} />
 
           <div
             className="
@@ -137,7 +136,12 @@ function Home() {
                     {layer.visible && (
                       <ImageLayer
                         key={layer.name}
-                        source={new ImageWMS({...options, params: {LAYERS: layer.name}})}
+                        source={
+                          new ImageWMS({
+                            ...options,
+                            params: { LAYERS: layer.sourceName.toLowerCase() },
+                          })
+                        }
                         zIndex={layer.zIndex}
                       />
                     )}

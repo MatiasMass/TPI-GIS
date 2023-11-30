@@ -4,7 +4,6 @@ import MapContext from '../Maps/MapContext'
 
 const ImageLayer = ({ source, zIndex = 0 }) => {
   const { map } = useContext(MapContext);
-console.log(source)
   useEffect(() => {
     if (!map) return
 

@@ -14,7 +14,7 @@ const DragBoxInteraction = () => {
   
   const layers = useSelector(store => store.layers.availableLayers)
   const visibleLayers = layers.filter(layer => layer.visible)
-
+    
   const { map } = useContext(MapContext);
 
   const dispatch = useDispatch()
@@ -23,7 +23,6 @@ const DragBoxInteraction = () => {
     if (visibleLayers.length === 0) return
     getIntersectedFeatures(visibleLayers, interactionCoordinates).then((response) => {
       console.log(response)
-      dispatch({ type: 'SET_CONSULT_LAYER', payload: response })
     })
   }
 
