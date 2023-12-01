@@ -134,3 +134,12 @@
   justify-content: center;
   align-items: center;
 }
+
+.bgRed{
+  background-color: rgb(100 28 52 / var(--tw-bg-opacity));
+  color: white;
+}
+
+.bgRed > *{
+  color: white;
+}

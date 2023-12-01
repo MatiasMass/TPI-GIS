@@ -10,15 +10,15 @@ const Modal = ({ showModal, setShowModal }) => {
     <>
       {showModal && Object.entries(consultLayer).length > 0 && (
         <div className="fixed inset-0 overflow-auto bg-slate-800 bg-opacity-90 flex justify-center items-center z-50">
-          <div className="bg-gray-500 w-11/12 max-w-screen-xl h-5/6 p-5 rounded-lg relative shadow-md shadow-slate-500 overflow-hidden">
-            <h6 className="bg-slate-600 rounded-md p-2 mb-2 text-white text-2xl">
+          <div className="bgRed w-11/12 max-w-screen-xl h-5/6 p-5 rounded-lg relative shadow-md shadow-slate-500 overflow-hidden">
+            <h6 className="bg-red-600 rounded-md p-2 mb-2 text-white text-2xl">
               Consulta de capas:
             </h6>
             <div className="max-h-[80vh] overflow-auto gap-4">
               {Object.entries(consultLayer).map(([layer, { features }]) => (
                 <React.Fragment key={layer}>
                   {features.length > 0 && (
-                    <h6 className="bg-slate-800 rounded-md p-2 mb-2 text-white text-xl w-full">
+                    <h6 className="bg-red-400 rounded-md p-2 mb-2 text-white text-xl w-full">
                       {layer}
                     </h6>
                   )}
@@ -28,7 +28,7 @@ const Modal = ({ showModal, setShowModal }) => {
                         <React.Fragment key={index}>
                           {index === 0 && (
                             <thead
-                              className="bg-slate-800 text-white"
+                              className="bg-red-800 text-white"
                               key={type + index}
                             >
                               <tr className="py-2">
@@ -40,7 +40,7 @@ const Modal = ({ showModal, setShowModal }) => {
                               </tr>
                             </thead>
                           )}
-                          <tbody className="text-slate-900">
+                          <tbody className="text-white">
                             {Object.entries(properties).map(([key, property]) => (
                               <td key={key} className="py-2">
                                 {property}
@@ -58,7 +58,7 @@ const Modal = ({ showModal, setShowModal }) => {
               onClick={() => {
                 setShowModal(false);
               }}
-              className="bg-white rounded-full py-3 px-5 text-md absolute -top-5 -right-5"
+              className="bg-gray-400 text-black rounded-full py-3 px-5 text-md absolute top-4 right-5"
             >
               x
             </button>
